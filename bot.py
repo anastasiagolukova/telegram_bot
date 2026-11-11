@@ -8,6 +8,23 @@ import textwrap
 import sqlite3
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
+from flask import Flask
+import threading
+import os
+
+app_flask = Flask(__name__)
+
+@app_flask.route('/')
+def health():
+    return "Bot is running!"
+
+def run_web():
+    # Render сам подставит нужный порт
+    port = int(os.environ.get("PORT", 10000))
+    app_flask.run(host='0.0.0.0', port=port)
+
+threading.Thread(target=run_web, daemon=True).start()
+
 
 # Загрузка токена
 load_dotenv()
